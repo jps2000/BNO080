@@ -521,14 +521,14 @@ void get_message(){
     
  # Rotation matrix (half)
  
- R00 = q1 * q1 + q2 * q2 -0.5f; // = 0.5f - q3 * q3 - q4 * q4;
- R01 = q2 * q3 - q1 * q4;
- R02 = q2 * q4 + q1 * q3;
- R10 = q2 * q3 + q1 * q4;
- R11 = q1 * q1 + q3 * q3 -0.5; // = 0.5f - q2 * q2 - q4 * q4;
- R12 = q3 * q4 - q1 * q2;
- R20 = q2 * q4 - q1 * q3;
- R21 = q3 * q4 + q1 * q2;
- R22 = q1 * q1 + q4 * q4 -0.5f; // = 0.5f -q2 * q2 -q3 * q3;
+ R00 = q0 * q0 + q1 * q1 -0.5f; // = 0.5f - q2 * q2 - q3 * q3;
+ R01 = q1 * q2 - q0 * q3;
+ R02 = q1 * q3 + q0 * q2;
+ R10 = q1 * q2 + q0 * q3;
+ R11 = q0 * q0 + q2 * q2 -0.5; // = 0.5f - q1 * q1 - q3 * q3;
+ R12 = q2 * q3 - q0 * q1;
+ R20 = q1 * q3 - q0 * q2;
+ R21 = q2 * q3 + q0 * q1;
+ R22 = q0 * q0 + q3 * q3 -0.5f; // = 0.5f - q1 * q1 - q2 * q2;
 
 */
