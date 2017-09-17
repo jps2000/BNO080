@@ -610,7 +610,7 @@ void scan_I2C (){
   gz = q0 * q0 + q3 * q3 -0.5f; 
   
   //calculate unity vector
-  norm = sqrtf(gx + gx + gy * gy + gz * gz);                           // normalize                                     
+  norm = sqrtf(gx * gx + gy * gy + gz * gz);                           // normalize                                     
   norm = 1.0f / norm;
   gx *= norm; gy *= norm; gz *= norm;
  
