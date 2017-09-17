@@ -261,7 +261,7 @@ void get_GRAV(){
 
     /*gx *= QP8 ; gy *= QP8; gz *= QP8;                                  // calculate results in ms^-2
     */
-    norm = sqrtf(gx + gx + gy * gy + gz * gz);                           // normalize                                     
+    norm = sqrtf(gx * gx + gy * gy + gz * gz);                           // normalize                                     
     norm = 1.0f / norm;
     gx *= norm; gy *= norm; gz *= norm;
    
