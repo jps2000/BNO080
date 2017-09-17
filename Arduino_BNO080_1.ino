@@ -240,7 +240,7 @@ void ME_cal(uint8_t P0, uint8_t P1, uint8_t P2, uint8_t P4){
   gx = q1 * q3 - q0 * q2;
   gy = q0 * q1 + q2 * q3;
   gz = q0 * q0 + q3 * q3 -0.5f; 
-  norm = sqrtf(gx + gx + gy * gy + gz * gz);                                                              
+  norm = sqrtf(gx * gx + gy * gy + gz * gz);                                                              
   norm = 1.0f / norm;
   gx *= norm; gy *= norm; gz *= norm;
  
