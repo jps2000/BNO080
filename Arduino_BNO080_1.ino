@@ -94,7 +94,7 @@ void setup() {
 
 // BNO settings
  
-  while (I2c.read(0x4A,0) != 0);         //wait until device is responding (32 kHz XTO running)  
+  while (I2c.read(BNO_ADDRESS,0) != 0);         //wait until device is responding (32 kHz XTO running)  
   delay(100);                            //needed to accept feature command; minimum not tested
   set_feature_cmd_QUAT();                // set the required feature report data rate  are generated  at preset report interva 
   ME_cal(1,1,1,0);                       // switch autocal on @ booting (otherwise gyro is not on)
@@ -262,5 +262,29 @@ void ME_cal(uint8_t P0, uint8_t P1, uint8_t P2, uint8_t P4){
  R20 = q2 * q4 - q1 * q3;
  R21 = q3 * q4 + q1 * q2;
  R22 = q1 * q1 + q4 * q4 -0.5f; // = 0.5f -q2 * q2 -q3 * q3;
+//***********************************************************************************
+tare multiplication 
+//before tare store  tare coefficients (^-1 = konjugate komplex)
+    t0 = q0;                                                                        
+    t1 = -q1;
+    t2 = -q2;
+    t3 = -q3;
+  // qt are the tared coefficients
+  qt0 = q0 * t0 - q1 * t1 - q2 * t2 - q3 * t3;      // multiplication matrix
+  qt1 = q0 * t1 + q1 * t0 + q2 * t3 - q3 * t2;
+  qt2 = q0 * t2 - q1 * t3 + q2 * t0 + q3 * t1;
+  qt3 = q0 * t3 + q1 * t2 - q2 * t1 + q3 * t0;
 
+alternative:
+//before tare store  tare coefficients (^-1 = konjugate komplex)
+    t0 = q0;                                                                        
+    t1 = q1;
+    t2 = q2;
+    t3 = q3;
+  // qt are the tared coefficients
+  qt0 =  q0 * t0 + q1 * t1 + q2 * t2 + q3 * t3; // qt are the tared quaternions to achieve 1,0,0,0 at moment of tare
+  qt1 = -q0 * t1 + q1 * t0 - q2 * t3 + q3 * t2; // konjugated multiplication matrix t1, t2, t3 negative sign
+  qt2 = -q0 * t2 + q1 * t3 + q2 * t0 - q3 * t1;
+  qt3 = -q0 * t3 - q1 * t2 + q2 * t1 + q3 * t0;
+//*************************************************************************************
 */
