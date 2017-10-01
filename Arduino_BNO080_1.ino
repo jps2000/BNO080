@@ -232,14 +232,14 @@ void ME_cal(uint8_t P0, uint8_t P1, uint8_t P2, uint8_t P4){
 //***********************************************************************************************************************************************
 
 /* Utilities (Quaternion mathematics)
- 
+ // q0 = qw
   q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3  = 1
    
  // Gravity vector from quaternions
   
-  gx = q1 * q3 - q0 * q2;
-  gy = q0 * q1 + q2 * q3;
-  gz = q0 * q0 + q3 * q3 -0.5f; 
+  gx = q1 * q3 - q0 * q2;               // R20
+  gy = q2 * q3 + q0 * q1;               // R21
+  gz = q0 * q0 + q3 * q3 -0.5f;         // R22
   norm = sqrtf(gx * gx + gy * gy + gz * gz);                                                              
   norm = 1.0f / norm;
   gx *= norm; gy *= norm; gz *= norm;
@@ -250,18 +250,17 @@ void ME_cal(uint8_t P0, uint8_t P1, uint8_t P2, uint8_t P4){
   pitch = -asin(2.0f * (q1 * q3 - q0 * q2));
   roll  =  atan2((q0 * q1 + q2 * q3), ((q0 * q0 + q3 * q3) - 0.5f));
   yaw *= radtodeg;    pitch *= radtodeg;    roll *= radtodeg; 
-    
- # Rotation matrix (half)
+# Rotation matrix (half)    
+R00 = q0 * q0 + q1 * q1 -0.5f; 
+R01 = q1 * q2 - q0 * q3;
+R02 = q1 * q3 + q0 * q2;
+R10 = q1 * q2 + q0 * q3;
+R11 = q0 * q0 + q2 * q2 -0.5; 
+R12 = q2 * q3 - q0 * q1;
+R20 = q1 * q3 - q0 * q2;
+R21 = q2 * q3 + q0 * q1;
+R22 = q0 * q0 + q3 * q3 -0.5f; 
  
- R00 = q1 * q1 + q2 * q2 -0.5f; // = 0.5f - q3 * q3 - q4 * q4;
- R01 = q2 * q3 - q1 * q4;
- R02 = q2 * q4 + q1 * q3;
- R10 = q2 * q3 + q1 * q4;
- R11 = q1 * q1 + q3 * q3 -0.5; // = 0.5f - q2 * q2 - q4 * q4;
- R12 = q3 * q4 - q1 * q2;
- R20 = q2 * q4 - q1 * q3;
- R21 = q3 * q4 + q1 * q2;
- R22 = q1 * q1 + q4 * q4 -0.5f; // = 0.5f -q2 * q2 -q3 * q3;
 //***********************************************************************************
 tare multiplication 
 //before tare store  tare coefficients (^-1 = konjugate komplex)
