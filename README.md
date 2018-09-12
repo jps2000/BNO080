@@ -5,3 +5,4 @@ The BNO080 generates high performance quaternions, linear acceleration etc: at a
 This sketch provides a basic functionality for testing and further developments. 
 The BNO080 provides more robust quaternions than the BNO055 and with improved accuracy. The  calibration algorithm can be controlled and results can be stored easily in the flash. The tare function is very useful in  case of relative movements.
 Note that for a correct heading  a proper magnetometer function is needed. Thus the sensor should be >1m away from iron masses (a vehicle´s roof). There is real time heading estimation accuracy reporting available.
+The _2 version uses the standard wire library necessary for M0/ M4 etc controllers
