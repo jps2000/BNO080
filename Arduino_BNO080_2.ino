@@ -88,9 +88,10 @@ void setup() {
   Serial.begin(115200);                  // 115200 baud
   
   #ifdef Simblee 
-  //Wire.speed = 400;  // select 400 kbps (100, 250)   // 
-  //Wire.beginOnPins(5,6);               // (SCLpin,SDApin)
+  Wire.speed = 400;  // select 400 kbps (100, 250)   // 
+  Wire.beginOnPins(5,6);               // (SCLpin,SDApin)
   #endif
+ 
   #ifdef Nano
   Wire.begin();                          // start I2C communication     
   Wire.setClock(400000L);                // set I2C to 400kHz
@@ -176,7 +177,6 @@ void get_QUAT(){
       i++;
     }
   }
-  //I2c.read(BNO_ADDRESS,21, cargo);
    
   else{ 
     Wire.requestFrom(BNO_ADDRESS,23);
@@ -184,7 +184,6 @@ void get_QUAT(){
       while (Wire.available()){
       cargo[i] = Wire.read();
       i++;
-  //I2c.read(BNO_ADDRESS,23, cargo);
       }
   }
       if((cargo[9] == quat_report) && ((cargo[10]) == next_data_seqNum )){      // check for report and incrementing data seqNum
@@ -211,10 +210,10 @@ void get_QUAT(){
 //************************************************************************
 //                COMMANDS
 //************************************************************************
-/* This code activates quaternion output  at defined rate
-*/
 
-void set_feature_cmd_QUAT(){                                                                 // quat_report determines the kind of quaternions (see data sheets)
+// This code activates quaternion output  at defined rate
+
+void set_feature_cmd_QUAT(){                                 // quat_report determines the kind of quaternions (see data sheets)
   uint8_t quat_setup[21] = {21,0,2,0,0xFD,quat_report,0,0,0,B0_rate,B1_rate,0,0,0,0,0,0,0,0,0,0};  
    Wire.beginTransmission(BNO_ADDRESS);   
    Wire.write(quat_setup, sizeof(quat_setup));            
@@ -233,7 +232,7 @@ void TARE(){
   uint8_t tare_persist[16] = {16,0,2,0,0xF2,0,0x03,0x01,0,0,0,0,0,0,0,0};
   Wire.beginTransmission(BNO_ADDRESS);
   Wire.write(tare_now, sizeof(tare_now));
-  //Wire.write(tare_persist, sizeof(tare_persist));  // uncomment  for tare persist;
+  //Wire.write(tare_persist, sizeof(tare_persist));                                  // uncomment  for tare persist;
   Wire.endTransmission();              
  
  }
