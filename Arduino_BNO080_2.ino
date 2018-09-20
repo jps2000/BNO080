@@ -80,9 +80,10 @@ void setup() {
 
 // pin definitions
   pinMode(Led, OUTPUT);
+  digitalWrite(Led, HIGH);               // initial state of LED = on
   pinMode(btn_TARE, INPUT_PULLUP);
   pinMode(btn_CAL, INPUT_PULLUP); 
-  digitalWrite(Led, HIGH);               // initial state of LED (on)
+
 
 // communication 
   Serial.begin(115200);                  // 115200 baud
