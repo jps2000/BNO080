@@ -39,11 +39,11 @@
 /*************************************
                 DEFINITIONS
  *************************************/
-//#define nrf52
+#define nrf52
 //#define Simblee       
-#define Nano
+//#define Nano
 
-#define Led                       10              // Led  (Arduino nano = 13) to measure loop duration (10)
+#define Led                       17              // Led  (Arduino nano = 13) to measure loop duration (10) nrf52 = 17
 #define btn_TARE                  A3              // input pin for button TARE
 #define btn_CAL                   6               // input pin for button TARE
 int plot_interval                 = 1000;          // plot interval in ms
@@ -306,17 +306,17 @@ void ME_cal(uint8_t P0, uint8_t P1, uint8_t P2, uint8_t P4){
  
  
  # Euler angles
-        yaw   =  atan2f(Q1 * Q2 + Q0 * Q3, Q0 * Q0 + Q1 * Q1 - 0.5f);   // heading
-        pitch =  -  asinf(2.0f * (Q1 * Q3 - Q0 * Q2));
-        roll  =  atan2f(Q0 * Q1 + Q2 * Q3, Q0 * Q0 + Q3 * Q3 - 0.5f);
+ yaw   =  atan2f(Q1 * Q2 + Q0 * Q3, Q0 * Q0 + Q1 * Q1 - 0.5f);   // heading
+ pitch =  -  asinf(2.0f * (Q1 * Q3 - Q0 * Q2));
+ roll  =  atan2f(Q0 * Q1 + Q2 * Q3, Q0 * Q0 + Q3 * Q3 - 0.5f);
   
-        yaw += PI * 0.5f;                                               // correction of the y axis direction if needed
-        if(yaw < 0) yaw += 2.0f * PI;
-        if(yaw > 2.0f *PI) yaw -= 2.0f * PI;  
+ yaw += PI * 0.5f;                                               // correction of the y axis direction if needed
+ if(yaw < 0) yaw += 2.0f * PI;
+ if(yaw > 2.0f *PI) yaw -= 2.0f * PI;  
   
-        yaw   *= radtodeg;
-        yaw    = 360.0f - yaw;                         // correction of the y axis direction if needed; apply location offset also here
-        pitch *= radtodeg;
-        roll  *= radtodeg;
+ yaw   *= radtodeg;
+ yaw    = 360.0f - yaw;                         // correction of the y axis direction if needed; apply location offset also here
+ pitch *= radtodeg;
+ roll  *= radtodeg;
 
 */
