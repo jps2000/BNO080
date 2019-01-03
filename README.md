@@ -1,6 +1,7 @@
 # BNO080
-Arduino sketch for BNO080 9DOF with sensor fusion
+Arduino sketches for BNO080 9DOF with sensor fusion
 The _2 version uses the standard wire library necessary for M0/ M4 etc controllers
+The nrf52 version works on Adafruit nrf52 feather and displays data on Adafruit Bluefruit LE app
 
 The BNO080 by http://hillcrestlabs.com/ is a successor of the BNO055 from Bosch Sensortec www.bosch-sensortec.com. It offers more features and a significantly improved performance however with a quite different interface. 
 Breakout boards are now also available http://hillcrestlabs.com/store/fsm300/ . Hillcrestlabs has issued a code using a ST Nucleo eval board. https://github.com/hcrest/bno080-nucleo-demo.
