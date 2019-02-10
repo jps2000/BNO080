@@ -46,7 +46,7 @@
 #define Led                       17              // Led  (Arduino nano = 13) to measure loop duration (10) nrf52 = 17
 #define btn_TARE                  A3              // input pin for button TARE
 #define btn_CAL                   6               // input pin for button TARE
-int plot_interval                 = 1000;          // plot interval in ms
+int plot_interval                 = 1000;         // plot interval in ms
 
 #define BNO_ADDRESS               0x4A            // Device address when SA0 Pin 17 = GND; 0x4B SA0 Pin 17 = VDD
 
@@ -57,8 +57,9 @@ int16_t q0,q1,q2,q3,h_est;                        // quaternions q0 = qw 1 = i; 
 float Q0,Q1,Q2,Q3,H_est;                                     
 uint8_t stat_;                                    // Status (0-3)
 
-const uint8_t quat_report        = 0x05;          // defines kind of rotation vector (0x05), geomagnetic (0x09), AR/VR (0x28),                                                 // without magnetometer : game rotation vector (0x08), AR/VR Game (0x29)
-const int reporting_frequency    = 200;            // reporting frequency in Hz  // note that serial output strongly reduces data rate
+const uint8_t quat_report        = 0x05;          // defines kind of rotation vector (0x05), geomagnetic (0x09), AR/VR (0x28)
+                                                  // without magnetometer : game rotation vector (0x08), AR/VR Game (0x29)
+const int reporting_frequency    = 200;           // reporting frequency in Hz  // note that serial output strongly reduces data rate
 
 const uint8_t B0_rate            = 1000000 / reporting_frequency;              //calculate LSB (byte 0)
 const uint8_t B1_rate            = B0_rate >> 8;                               //calculate byte 1
