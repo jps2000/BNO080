@@ -276,7 +276,7 @@ void ME_cal(uint8_t P0, uint8_t P1, uint8_t P2, uint8_t P4){
  
   q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3  = 1
    
- // Gravity vector from quaternions
+ // Gravity vector from quaternion
   
   gx = q1 * q3 - q0 * q2;
   gy = q0 * q1 + q2 * q3;
@@ -285,13 +285,7 @@ void ME_cal(uint8_t P0, uint8_t P1, uint8_t P2, uint8_t P4){
   norm = 1.0f / norm;
   gx *= norm; gy *= norm; gz *= norm;
  
- // Euler angles from quaternions (radians)   
-
-  yaw   =  atan2((q1 * q2 + q0 * q3), ((q0 * q0 + q1 * q1) - 0.5f));   
-  pitch = -asin(2.0f * (q1 * q3 - q0 * q2));
-  roll  =  atan2((q0 * q1 + q2 * q3), ((q0 * q0 + q3 * q3) - 0.5f));
-  yaw *= radtodeg;    pitch *= radtodeg;    roll *= radtodeg; 
-    
+ 
  # Rotation matrix (half)
  
  R00 = q1 * q1 + q2 * q2 -0.5f; // = 0.5f - q3 * q3 - q4 * q4;
@@ -318,5 +312,45 @@ void ME_cal(uint8_t P0, uint8_t P1, uint8_t P2, uint8_t P4){
  yaw    = 360.0f - yaw;                         // correction of the y axis direction if needed; apply location offset also here
  pitch *= radtodeg;
  roll  *= radtodeg;
+ 
+//***********************************************************************************
+TARE (to make qt = 1,0,0,0) from q = (q0,q1,q2,q3)
+//store  konjugate komplex quat  (*-1 of i, j, k) at the moment of TARE
+    t0 = q0;                                                                        
+    t1 = -q1;
+    t2 = -q2;
+    t3 = -q3;
+  // qt are then the tared coefficients
+  qt0 = q0 * t0 - q1 * t1 - q2 * t2 - q3 * t3;      // multiplication matrix
+  qt1 = q0 * t1 + q1 * t0 + q2 * t3 - q3 * t2;
+  qt2 = q0 * t2 - q1 * t3 + q2 * t0 + q3 * t1;
+  qt3 = q0 * t3 + q1 * t2 - q2 * t1 + q3 * t0;
 
+alternative:
+//store quats at the moment of TARE
+    t0 = q0;                                                                        
+    t1 = q1;
+    t2 = q2;
+    t3 = q3;
+  // qt are the tared coefficients
+  qt0 =  q0 * t0 + q1 * t1 + q2 * t2 + q3 * t3;    // konjugated multiplication matrix t1, t2, t3 negative sign
+  qt1 = -q0 * t1 + q1 * t0 - q2 * t3 + q3 * t2; 
+  qt2 = -q0 * t2 + q1 * t3 + q2 * t0 - q3 * t1;
+  qt3 = -q0 * t3 - q1 * t2 + q2 * t1 + q3 * t0;
+
+ // Quaternion Qt(1,0,0,0) leads to gravity G = (0, 0, 1) (see formula for gravity)
+ // Hence the angle of the sensor  to gravity after tare (any orientation) is the dot product between the unity
+ // vectors (0,0,1) and (gx,gy,gz) which is 
+ 
+  PHI = acos(gz);       //  angle of the cone
+  PHI *= 180.0f / PI;
+  
+//*************************************************************************************
+
+//Angle between quaternions
+
+float dotproduct = Q0 * q0 + Q1 * q1 + Q2 * q2 + Q3 * q3;
+float angle = radtodeg * 2.0f * acos(dotproduct);
+
+//*************************************************************************************
 */
