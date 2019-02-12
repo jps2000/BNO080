@@ -197,8 +197,12 @@ void set_feature_cmd_QUAT(){                                                    
 */
 
 void TARE(){
-  uint8_t tare_now[15] = {0,2,0,0xF2,0,0x03,0,0x07,0,0,0,0,0,0,0};                //0x07 means all axes 0x04 = Z axis only; based on rotation vector
-  uint8_t tare_persist[15] = {0,2,0,0xF2,0,0x03,0x01,0,0,0,0,0,0,0,0};
+  uint8_t RV;               // rotation vector used to tare defined in quat_report
+  if(quat_report == 0x05) RV = 0x00;
+  if(quat_report == 0x08) RV = 0x01; 
+  if(quat_report == 0x09) RV = 0x02; 
+  uint8_t tare_now[16] = {16,0,2,0,0xF2,0,0x03,0,0x07,RV,0,0,0,0,0,0};                //0x07 means all axes 0x04 = Z axis only; based on rotation vector
+  uint8_t tare_persist[16] = {16,0,2,0,0xF2,0,0x03,0x01,RV,0,0,0,0,0,0,0};
   I2c.write(BNO_ADDRESS, sizeof(tare_now)+1, tare_now, sizeof(tare_now));
                
   //I2c.write(BNO_ADDRESS, sizeof(tare_persist)+1, tare_persist, sizeof(tare_persist));  // uncomment  for tare persist;
