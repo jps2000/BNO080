@@ -214,11 +214,14 @@ void loop()
    bleuart.print (" R "); bleuart.println (roll,1); 
  #endif
 
- #ifdef plotter                                     
-   bleuart.print(-200); bleuart.print(" ");  bleuart.print(360); bleuart.print(" ");  // set limits for plot to override autoscale in app
-   bleuart.print(roll,0);bleuart.print(" ");
-   bleuart.print(pitch,0);bleuart.print(" ");
-   bleuart.println(yaw,0);  
+ #ifdef plotter
+  // Having  everything in one string leads to much faster data transfer --> check with nrf logger and toolbox
+   bleuart.print((String)"-200,360," + String(yaw,0) +"," + String(pitch,0) +"," + String(roll,0) + "\r\n");  //println does require an additional transfer
+
+  // bleuart.print(-200); bleuart.print(" ");  bleuart.print(360); bleuart.print(" ");  // set limits for plot to override autoscale in app
+  // bleuart.print(roll,0);bleuart.print(" ");
+  // bleuart.print(pitch,0);bleuart.print(" ");
+  // bleuart.println(yaw,0);  
  #endif
              
   timer_data = millis();
@@ -392,8 +395,12 @@ void set_feature_cmd_QUAT()                                // quat_report determ
 
 void TARE()
   {
-  uint8_t tare_now[16] = {16,0,2,0,0xF2,0,0x03,0,0x07,0,0,0,0,0,0,0};                //0x07 means all axes 0x04 = Z axis only; based on rotation vector
-  uint8_t tare_persist[16] = {16,0,2,0,0xF2,0,0x03,0x01,0,0,0,0,0,0,0,0};
+  uint8_t RV;               // rotation vector used to tare defined in quat_report
+  if(quat_report == 0x05) RV = 0x00;
+  if(quat_report == 0x08) RV = 0x01; 
+  if(quat_report == 0x09) RV = 0x02; 
+  uint8_t tare_now[16] = {16,0,2,0,0xF2,0,0x03,0,0x07,RV,0,0,0,0,0,0};                //0x07 means all axes 0x04 = Z axis only; based on rotation vector
+  uint8_t tare_persist[16] = {16,0,2,0,0xF2,0,0x03,0x01,RV,0,0,0,0,0,0,0};
   Wire.beginTransmission(BNO_ADDRESS);
   Wire.write(tare_now, sizeof(tare_now));
   //Wire.write(tare_persist, sizeof(tare_persist));                                  // uncomment  for tare persist;
