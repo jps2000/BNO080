@@ -65,7 +65,6 @@ uint8_t cargo[23];
 
 uint8_t readbuf                   = 0x00;         // buffer to hold uart read data
 
-int16_t q0,q1,q2,q3,h_est;                        // quaternions q0 = qw 1 = i; 2 = j; 3 = k;
 float Q0,Q1,Q2,Q3, H_est;
 uint8_t stat_;                                    // Status (0-3)
 float yaw,pitch,roll;
@@ -314,6 +313,8 @@ void startAdv(void)
 //************** BNO080 code *************************************************************************
 
 void get_QUAT()
+int16_t q0,q1,q2,q3,h_est;                        // quaternions q0 = qw 1 = i; 2 = j; 3 = k;
+float a,b,c,d,norm;
 {                                                               
   if (quat_report == 0x08 || quat_report == 0x29)
     {
@@ -345,7 +346,13 @@ void get_QUAT()
         q3 = (((int16_t)cargo[18] << 8) | cargo[17] );
         q0 = (((int16_t)cargo[20] << 8) | cargo[19] ); 
 
-        Q0 = q0 * QP(14); Q1 = q1 * QP(14); Q2 = q2 * QP(14); Q3 = q3 * QP(14);    // apply Q point (quats are already unity vector)
+       // patch for  rarely occurring wrong data from BNO of unknown reasons. --> Check if q(0,1,2,3) is not unity vector
+       
+        a = q0 * QP(14); b = q1 * QP(14); c = q2 * QP(14); d = q3 * QP(14);     // apply Q point (quats are already unity vector)
+        norm = sqrtf(a * a + b * b + c * c + d * d);
+        if(abs(norm - 1.0f) > 0.0015) return;                                   // skip faulty quats; margin is empirically determined
+        
+        Q0 = a; Q1 = b; Q2 = c; Q3 = d;                                         // new quaternions
 
         if (quat_report == 0x05 || quat_report == 0x09 || quat_report == 0x28 )  // heading accurracy only in some reports available
           {  
@@ -355,8 +362,10 @@ void get_QUAT()
           }
         
         // calculate euler angles                
-        yaw   =  atan2f(Q1 * Q2 + Q0 * Q3, Q0 * Q0 + Q1 * Q1 - 0.5f);   
-        pitch =  -  asinf(2.0f * (Q1 * Q3 - Q0 * Q2));
+        yaw   =  atan2f(Q1 * Q2 + Q0 * Q3, Q0 * Q0 + Q1 * Q1 - 0.5f);
+        float argument = 2.0f * (Q1 * Q3 - Q0 * Q2);                               // may be > 1 due to rounding errors --> undefined
+        if(abs(argument) > 1.0f) argument = 1.0f; 
+        pitch =  asinf(argument); 
         roll  =  atan2f(Q0 * Q1 + Q2 * Q3, Q0 * Q0 + Q3 * Q3 - 0.5f);
   
         yaw += PI * 0.5f; // correction of the y axis direction
