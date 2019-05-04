@@ -51,8 +51,6 @@ int plot_interval                 = 1000;         // plot interval in ms
 #define BNO_ADDRESS               0x4A            // Device address when SA0 Pin 17 = GND; 0x4B SA0 Pin 17 = VDD
 
 uint8_t cargo[23]; 
-uint8_t next_data_seqNum          = 0x10;         // next data sequence number 
-
 
 float Q0,Q1,Q2,Q3,H_est;                                     
 uint8_t stat_;                                    // Status (0-3)
@@ -195,11 +193,9 @@ void get_QUAT(){
       i++;
       }
   }
-      if((cargo[9] == quat_report) {                                            // check for report 
-      //if((cargo[9] == quat_report) && ((cargo[10]) == next_data_seqNum )){    // check for report and incrementing data seqNum
-        next_data_seqNum = ++cargo[10];                                         // predict next data seqNum              
-        stat_ = cargo[11] & 0x03;                                               // bits 1:0 contain the status (0,1,2,3)  
-    
+      if((cargo[9] == quat_report)                                             // check for report 
+         
+        {
         q1 = (((int16_t)cargo[14] << 8) | cargo[13] ); 
         q2 = (((int16_t)cargo[16] << 8) | cargo[15] );
         q3 = (((int16_t)cargo[18] << 8) | cargo[17] );
@@ -211,7 +207,8 @@ void get_QUAT(){
         if(abs(norm - 1.0f) > 0.0015) return;                                   // skip faulty quats
         
         Q0 = a; Q1 = b; Q2 = c; Q3 = d;
-
+       stat_ = cargo[11] & 0x03;                                               // bits 1:0 contain the status (0,1,2,3)  
+    
        if (quat_report == 0x05 || quat_report == 0x09 || quat_report == 0x28 ){  // heading accurracy only in some reports available
         h_est = (((int16_t)cargo[22] << 8) | cargo[21] );                        // heading accurracy estimation  
         H_est = h_est * QP(12);                                                  // apply Q point this is 12  not 14
