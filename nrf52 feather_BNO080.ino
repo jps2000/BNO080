@@ -338,9 +338,7 @@ float a,b,c,d,norm;
       }
     }
     if((cargo[9] == quat_report) )
-     {                  
-        stat_ = cargo[11] & 0x03;                                                // bits 1:0 contain the status (0,1,2,3)  
-    
+     {                     
         q1 = (((int16_t)cargo[14] << 8) | cargo[13] ); 
         q2 = (((int16_t)cargo[16] << 8) | cargo[15] );
         q3 = (((int16_t)cargo[18] << 8) | cargo[17] );
@@ -348,13 +346,14 @@ float a,b,c,d,norm;
 
        // patch for  rarely occurring wrong data from BNO of unknown reasons. --> Check if q(0,1,2,3) is not unity vector
        
-        a = q0 * QP(14); b = q1 * QP(14); c = q2 * QP(14); d = q3 * QP(14);     // apply Q point (quats are already unity vector)
+        a = q0 * QP(14); b = q1 * QP(14); c = q2 * QP(14); d = q3 * QP(14);       // apply Q point (quats are already unity vector)
         norm = sqrtf(a * a + b * b + c * c + d * d);
-        if(abs(norm - 1.0f) > 0.0015) return;                                   // skip faulty quats; margin is empirically determined
+        if(abs(norm - 1.0f) > 0.0015) return;                                      // skip faulty quats; margin is empirically determined
         
-        Q0 = a; Q1 = b; Q2 = c; Q3 = d;                                         // new quaternions
-
-        if (quat_report == 0x05 || quat_report == 0x09 || quat_report == 0x28 )  // heading accurracy only in some reports available
+        Q0 = a; Q1 = b; Q2 = c; Q3 = d;                                            // update quaternions
+        stat_ = cargo[11] & 0x03;                                                  // bits 1:0 contain the status (0,1,2,3) 
+     
+        if (quat_report == 0x05 || quat_report == 0x09 || quat_report == 0x28 )    // heading accurracy only in some reports available
           {  
           h_est = (((int16_t)cargo[22] << 8) | cargo[21] );                        // heading accurracy estimation  
           H_est = h_est * QP(12);                                                  // apply Q point 
