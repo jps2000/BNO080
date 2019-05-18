@@ -313,9 +313,10 @@ void startAdv(void)
 //************** BNO080 code *************************************************************************
 
 void get_QUAT()
+{
 int16_t q0,q1,q2,q3,h_est;                        // quaternions q0 = qw 1 = i; 2 = j; 3 = k;
 float a,b,c,d,norm;
-{                                                               
+                                                              
   if (quat_report == 0x08 || quat_report == 0x29)
     {
     Wire.requestFrom(BNO_ADDRESS,21);  //21
