@@ -156,7 +156,7 @@ void loop() {
      //actions follow here
      save_DCD();                                     // store cal in flash
      delay(200);
-     ME_cal(0,0,1,0);                                //autocal acc + gyro stop; magnetometer  cal continues
+     // ME_cal(0,0,1,0);                                //autocal acc + gyro stop; magnetometer  cal continues
     }
  //*******************************************************
 
@@ -193,7 +193,7 @@ void get_QUAT(){
       i++;
       }
   }
-      if((cargo[9] == quat_report)                                             // check for report 
+      if(cargo[9] == quat_report)                                             // check for report 
          
         {
         q1 = (((int16_t)cargo[14] << 8) | cargo[13] ); 
@@ -206,7 +206,7 @@ void get_QUAT(){
         norm = sqrtf(a * a + b * b + c * c + d * d);
         if(abs(norm - 1.0f) > 0.0015) return;                                   // skip faulty quats
         
-        Q0 = a; Q1 = b; Q2 = c; Q3 = d;
+        Q0 = a; Q1 = b; Q2 = c; Q3 = d;                                        // here orientation may be changed b=x; c=y, d = z
        stat_ = cargo[11] & 0x03;                                               // bits 1:0 contain the status (0,1,2,3)  
     
        if (quat_report == 0x05 || quat_report == 0x09 || quat_report == 0x28 ){  // heading accurracy only in some reports available
