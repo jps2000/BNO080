@@ -151,12 +151,12 @@ void loop() {
 
    if(digitalRead(btn_CAL) == LOW){
      delay(200);
-     while(digitalRead(btn_CAL) == LOW );       // wait for button release
+     while(digitalRead(btn_CAL) == LOW );            // wait for button release
     
      //actions follow here
      save_DCD();                                     // store cal in flash
      delay(200);
-     // ME_cal(0,0,1,0);                                //autocal acc + gyro stop; magnetometer  cal continues
+     ME_cal(0,0,1,0);                                //autocal acc + gyro stop; magnetometer  cal continues
     }
  //*******************************************************
 
