@@ -50,7 +50,7 @@ int plot_interval                 = 1000;         // plot interval in ms
 
 #define BNO_ADDRESS               0x4A            // Device address when SA0 Pin 17 = GND; 0x4B SA0 Pin 17 = VDD
 
-uint8_t cargo[23]; 
+uint8_t cargo[25]; 
 
 float Q0,Q1,Q2,Q3,H_est;                                     
 uint8_t stat_;                                    // Status (0-3)
@@ -59,10 +59,12 @@ const uint8_t quat_report        = 0x05;          // defines kind of rotation ve
                                                   // without magnetometer : game rotation vector (0x08), AR/VR Game (0x29)
 const int reporting_frequency    = 200;           // reporting frequency in Hz  // note that serial output strongly reduces data rate
 
-const uint8_t B0_rate            = 1000000 / reporting_frequency;              //calculate LSB (byte 0)
-const uint8_t B1_rate            = B0_rate >> 8;                               //calculate byte 1
+uint32_t rate              = 1000000 / reporting_frequency; 
+uint8_t B0_rate            = rate & 0xFF;                       //calculates LSB (byte 0)
+uint8_t B1_rate            = (rate >> 8) & 0xFF; 
+uint8_t B2_rate            = (rate >> 16) & 0xFF; 
+uint8_t B3_rate            = rate >> 24;                        //calculates MSB (byte 3) 
 
-                               
 /******* Conversions *************/
 
 #define QP(n)                       (1.0f / (1 << n))                   // 1 << n ==  2^-n
@@ -109,10 +111,50 @@ void setup() {
   Wire.beginTransmission(BNO_ADDRESS);
   while (Wire.endTransmission() != 0);         //wait until device is responding (32 kHz XTO running)
   Serial.println("BNO found");
-    
-  delay(100);                            //needed to accept feature command; minimum not tested
+
+ /*
+  for (byte i = 8; i < 120; i++)              //I2C Scanner for debug purpose
+  {
+    Wire.beginTransmission (i);
+    if (Wire.endTransmission () == 0)
+      {
+      Serial.print ("Found address: ");
+      Serial.print (i, DEC);
+      Serial.print (" (0x");
+      Serial.print (i, HEX);
+      Serial.println (")");
+      } 
+  } 
+  */
+ 
+  // On system startup, the SHTP control application sends its full advertisement response, unsolicited, to the host (chapter 5.1ff SHTP v1.7) 
+  // remark: commands are only accepted after that  alternatively add a delay(200);
+ 
+  Serial.print("SHTP advertising: ");
+  cargo[0] = 1;                                       // start condition
+  while (cargo[0] != 0)                               // repeat if length is still > 0
+  {   
+    Wire.requestFrom(BNO_ADDRESS,32);                 
+    int i=0; 
+      while (Wire.available())
+      {
+      cargo[i] = Wire.read();
+      i++;
+      } 
+      for(int j = 4 ; j <33; j++)  // skip first 4 bytes 
+      {
+      Serial.print (cargo[j],HEX); 
+      Serial.print(",");
+      }   
+   } 
+   Serial.println(); 
+ 
+ 
+  get_Product_ID();                      
   set_feature_cmd_QUAT();                // set the required feature report data rate  are generated  at preset report interva 
-  ME_cal(1,1,1,0);                       // switch autocal on @ booting (otherwise gyro is not on)
+  save_periodic_DCD();                   // saves DCD every 5 minutes ( only if cal = 3)
+ 
+  ME_cal(1,1,1,0);                       // default after reset is (1,0,1,0); switch autocal on @ booting (otherwise gyro is not on)
 
 }
 
@@ -226,7 +268,7 @@ void get_QUAT(){
 // This code activates quaternion output  at defined rate
 
 void set_feature_cmd_QUAT(){                                 // quat_report determines the kind of quaternions (see data sheets)
-  uint8_t quat_setup[21] = {21,0,2,0,0xFD,quat_report,0,0,0,B0_rate,B1_rate,0,0,0,0,0,0,0,0,0,0};  
+  uint8_t quat_setup[21] = {21,0,2,0,0xFD,quat_report,0,0,0,B0_rate,B1_rate,B2_rate,B3_rate,0,0,0,0,0,0,0,0};  
    Wire.beginTransmission(BNO_ADDRESS);   
    Wire.write(quat_setup, sizeof(quat_setup));            
    Wire.endTransmission();
@@ -280,6 +322,49 @@ void ME_cal(uint8_t P0, uint8_t P1, uint8_t P2, uint8_t P4){
   Wire.endTransmission();  
 }
 
+//***********************************************************************************************************************************************
+// Saves dynamic cal data periodically every 5 minutes (default)  
+
+void save_periodic_DCD(){                                             
+  uint8_t periodic_dcd[16] = {16,0,2,0,0xF2,0,0x09,0,0,0,0,0,0,0,0,0};
+  Wire.beginTransmission(BNO_ADDRESS);  
+  Wire.write(periodic_dcd, sizeof(periodic_dcd));
+  Wire.endTransmission();    
+}
+
+//***********************************************************************************************************************************************
+/* This code reads  the product ID
+ */
+void get_Product_ID(){
+  uint8_t get_PID[6] = {6,0,2,0,0xF9,0};
+  //uint8_t get_PID[6] = {6,0,2,0,0xF9,0};
+  Wire.beginTransmission(BNO_ADDRESS);                         // requesting product ID (chapter 6.3.1)
+  Wire.write(get_PID, sizeof(get_PID));
+  Wire.endTransmission();  
+  delay(200);                                                  // wait until response is available
+  
+
+   while (cargo[4] != 0xF8)                            // wait for command response
+  {   
+    Wire.requestFrom(BNO_ADDRESS,25);                 // fetching response(chapter 6.4.7.3)
+    int i=0; 
+      while (Wire.available())
+      {
+      cargo[i] = Wire.read();
+      i++;
+      }
+   }  
+        Serial.print ("Product ID response: ");
+        Serial.print ("Reset cause: ");
+        Serial.print (cargo[5],HEX); 
+        Serial.print (" SW Major: ");
+        Serial.print (cargo[6],HEX); 
+        Serial.print (" SW Minor: "); 
+        Serial.println (cargo[7],HEX);
+   
+       
+       
+}
 //***********************************************************************************************************************************************
 
 /* Utilities (Quaternion mathematics)
