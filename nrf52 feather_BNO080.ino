@@ -172,8 +172,8 @@ void setup()
     
   delay(200);                            //needed to accept feature command; minimum not tested
   set_feature_cmd_QUAT();                // set the required feature report data rate  are generated  at preset report interva 
- 
-  ME_cal(1,1,1,0);                       // switch autocal on @ booting (otherwise gyro is not on)
+  save_periodic_DCD();                   // saves DCD every 5 minutes ( only if cal = 3)
+ // ME_cal(1,1,1,0);                       // switch autocal on @ booting (otherwise gyro is not on)
 }
 
 //******************************************************************************************
@@ -246,7 +246,7 @@ void loop()
    {
     save_DCD();                             // store cal in flash
     delay(200);
-    ME_cal(0,0,1,0);                        //autocal acc + gyro stop; magnetometer  cal continues
+    // ME_cal(0,0,1,0);                        //autocal acc + gyro stop; magnetometer  cal continues
     readbuf = 0;                            // clear readbuffer
     for(int i=0; i<2;i++){digitalWrite (Led,LOW); delay(200);digitalWrite (Led,HIGH);delay(200);}     // acqknowledge blink 2x 
    }
@@ -445,4 +445,13 @@ void ME_cal(uint8_t P0, uint8_t P1, uint8_t P2, uint8_t P4)
   Wire.endTransmission();  
   }
 
+//***********************************************************************************************************************************************
+// Saves dynamic cal data periodically every 5 minutes (default)  
+
+void save_periodic_DCD(){                                             
+  uint8_t periodic_dcd[16] = {16,0,2,0,0xF2,0,0x09,0,0,0,0,0,0,0,0,0};
+  Wire.beginTransmission(BNO_ADDRESS);  
+  Wire.write(periodic_dcd, sizeof(periodic_dcd));
+  Wire.endTransmission();    
+}
 //***********************************************************************************************************************************************
