@@ -154,7 +154,8 @@ void setup() {
   set_feature_cmd_QUAT();                // set the required feature report data rate  are generated  at preset report interva 
   save_periodic_DCD();                   // saves DCD every 5 minutes ( only if cal = 3)
  
-  ME_cal(1,1,1,0);                       // default after reset is (1,0,1,0); switch autocal on @ booting (otherwise gyro is not on)
+ 
+  //ME_cal(1,1,1,0);                       // default after reset is (1,0,1,0); switch autocal on @ booting (otherwise gyro is not on)
 
 }
 
@@ -198,7 +199,7 @@ void loop() {
      //actions follow here
      save_DCD();                                     // store cal in flash
      delay(200);
-     ME_cal(0,0,1,0);                                //autocal acc + gyro stop; magnetometer  cal continues
+    // ME_cal(0,0,1,0);                                //autocal acc + gyro stop; magnetometer  cal continues
     }
  //*******************************************************
 
