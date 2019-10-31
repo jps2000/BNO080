@@ -21,3 +21,10 @@ https://en.wikipedia.org/wiki/Degaussing
 
 You may do this also with screw drivers, tweezers etc  - old wisdom from  magnetic tape recorders
 
+My best practice is
+Use rotation vector 0x05 with 400Hz update rate
+Degauss the board.
+Be careful with indoor use
+In setup call save_periodic_DCD(); and set cal to ME_cal(1,1,1,0);
+This achieves best cal 3 status
+Calibrate the board including iron parts in the vicinity
