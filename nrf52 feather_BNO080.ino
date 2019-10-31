@@ -70,7 +70,7 @@ uint8_t stat_;                                    // Status (0-3)
 float yaw,pitch,roll;
 
 const uint8_t quat_report        = 0x05;          // defines kind of rotation vector (0x05), geomagnetic (0x09), AR/VR (0x28),                                                 // without magnetometer : game rotation vector (0x08), AR/VR Game (0x29)
-const int reporting_frequency    = 100;           // reporting frequency in Hz  // note that serial output strongly reduces data rate
+const int reporting_frequency    = 400;           // reporting frequency in Hz  // note that serial output strongly reduces data rate
 
 const uint8_t B0_rate            = 1000000 / reporting_frequency;              //calculate LSB (byte 0)
 const uint8_t B1_rate            = B0_rate >> 8;                               //calculate byte 1                              
@@ -173,7 +173,7 @@ void setup()
   delay(200);                            //needed to accept feature command; minimum not tested
   set_feature_cmd_QUAT();                // set the required feature report data rate  are generated  at preset report interva 
   save_periodic_DCD();                   // saves DCD every 5 minutes ( only if cal = 3)
- // ME_cal(1,1,1,0);                       // switch autocal on @ booting (otherwise gyro is not on)
+  ME_cal(1,1,1,0);                       // switch autocal on @ booting (otherwise gyro is not on)
 }
 
 //******************************************************************************************
