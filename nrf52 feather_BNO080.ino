@@ -113,9 +113,7 @@ void setup()
 
   digitalWrite(Led,LOW);                   // initial state of LED = off  
   pinMode(Led, OUTPUT);
-  
-  Bluefruit.begin();
-  
+    
   Wire.begin();                            // start I2C communication pins are defined in variants  
   //Wire.setClock(400000);                 // select 400 kbps (100, 250) not needed because 400kHz is default 
  
@@ -129,14 +127,16 @@ void setup()
   // Note: All config***() function must be called before begin()
   Bluefruit.configPrphBandwidth(BANDWIDTH_MAX);
 
+  Bluefruit.begin();
+ 
   // Set power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 3, 4 (5,6,7,8, nrf52840 only)
   Bluefruit.setTxPower(4);
   
   Bluefruit.setName(NAME);
   //Bluefruit.setName(getMcuUniqueID()); // useful testing with multiple central connections
   
-  Bluefruit.setConnectCallback(connect_callback);
-  Bluefruit.setDisconnectCallback(disconnect_callback);
+  Bluefruit.Periph.setConnectCallback(connect_callback);
+  Bluefruit.Periph.setDisconnectCallback(disconnect_callback);
 
   // Configure and Start Device Information Service
   bledis.setManufacturer("JPS2000");
@@ -259,13 +259,20 @@ void loop()
 
 void connect_callback(uint16_t conn_handle)
 {
-  char central_name[32] = { 0 };
-  Bluefruit.Gap.getPeerName(conn_handle, central_name, sizeof(central_name));
+  // Get the reference to current connection
+  BLEConnection* connection = Bluefruit.Connection(conn_handle);
 
+  char central_name[32] = { 0 };
+  connection->getPeerName(central_name, sizeof(central_name));
+  
   Serial.print("Connected to ");
   Serial.println(central_name);
-
+  conn = true;                      // for auto shutdown
+ 
+  //digitalWrite(19,LOW);           //switch off led optionally
+  
 }
+
 
 /*
  * Callback invoked when a connection is dropped
