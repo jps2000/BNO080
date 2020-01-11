@@ -47,6 +47,7 @@
 #define btn_TARE                  A3              // input pin for button TARE
 #define btn_CAL                   6               // input pin for button TARE
 int plot_interval                 = 1000;         // plot interval in ms
+unsigned long plot_timer          = 0;
 
 #define BNO_ADDRESS               0x4A            // Device address when SA0 Pin 17 = GND; 0x4B SA0 Pin 17 = VDD
 
@@ -167,14 +168,14 @@ void loop() {
 
  get_QUAT();                           // get actual QUAT data (if new are available)
   
- if (millis() - plot_interval > 0){ 
+ if (millis() - plot_timer > plot_interval){ 
         Serial.print ("S "); Serial.print (stat_);
         Serial.print ("; E "); Serial.print (H_est + 0.05f,1);                   // including rounding
         Serial.print ("; q0 "); Serial.print (Q0 + 0.00005f,4);                  // = qw (more digits to find out north direction (y axis N --> q0 = 1)
         Serial.print ("; q1 "); Serial.print (Q1 + 0.0005f,3);
         Serial.print ("; q2 "); Serial.print (Q2 + 0.0005f,3);
         Serial.print ("; q3 "); Serial.println (Q3 + 0.0005f,3);
-        plot_interval = millis();
+        plot_timer = millis();
  }
  
   //if (stat_ == 3)  digitalWrite(Led,HIGH);                              // indicate cal status 3
