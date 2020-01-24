@@ -386,17 +386,28 @@ void get_Product_ID(){
  
  
  # Rotation matrix (half)
+  (R00 R10 R20)
+ =(R01 R11 R21)
+  (R02 R12 R22)
+  
+ R00 = q0 * q0 + q1 * q1 -0.5f; // = 0.5f - q2 * q2 - q3 * q3;
+ R01 = q1 * q2 - q0 * q3;
+ R02 = q1 * q3 + q0 * q2;
+ R10 = q1 * q2 + q0 * q3;
+ R11 = q0 * q0 + q2 * q2 -0.5; // = 0.5f - q1 * q1 - q3 * q3;
+ R12 = q2 * q3 - q0 * q1;
+ R20 = q1 * q3 - q0 * q2;
+ R21 = q2 * q3 + q0 * q1;
+ R22 = q0 * q0 + q3 * q3 -0.5f; // = 0.5f -q1 * q1 -q2 * q2;
  
- R00 = q1 * q1 + q2 * q2 -0.5f; // = 0.5f - q3 * q3 - q4 * q4;
- R01 = q2 * q3 - q1 * q4;
- R02 = q2 * q4 + q1 * q3;
- R10 = q2 * q3 + q1 * q4;
- R11 = q1 * q1 + q3 * q3 -0.5; // = 0.5f - q2 * q2 - q4 * q4;
- R12 = q3 * q4 - q1 * q2;
- R20 = q2 * q4 - q1 * q3;
- R21 = q3 * q4 + q1 * q2;
- R22 = q1 * q1 + q4 * q4 -0.5f; // = 0.5f -q2 * q2 -q3 * q3;
+ To rotate a vector V = (vx,vx,vz) in quaternion frame
  
+ W = (wx,wy,wz) 
+ wx = R00 * vx + R10 * vy + R20 * vz;
+ wy = R01 * vx + R11 * vy + R21 * vz:
+ wz = R02 * vx + R12 * vy + R22 * vz:
+ 
+ For example gravity vector  g = (0,0,1)  --> G = (gx,gy,gz) = (R20, R21, R22)
  
  # Euler angles
  yaw   =  atan2f(Q1 * Q2 + Q0 * Q3, Q0 * Q0 + Q1 * Q1 - 0.5f);   // heading
