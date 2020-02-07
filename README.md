@@ -1,7 +1,7 @@
 # BNO080
-Arduino sketches for BNO080 9DOF with sensor fusion
-The _2 version uses the standard wire library necessary for M0/ M4 etc controllers
-The nrf52 version works on Adafruit nrf52 feather and displays data on Adafruit Bluefruit LE app
+Arduino sketches for BNO080 9DOF with sensor fusion.
+The _2 version uses the standard wire library necessary for M0/ M4 etc controllers.
+The nrf52 version works on Adafruit nrf52 feather and displays data on Adafruit Bluefruit LE app.
 The _1 version is not up to date. So take it for reference only.
 
 The BNO080 by http://hillcrestlabs.com/ is a successor of the BNO055 from Bosch Sensortec www.bosch-sensortec.com. It offers more features and a significantly improved performance however with a quite different interface. 
@@ -23,10 +23,10 @@ https://en.wikipedia.org/wiki/Degaussing
 You may do this also with screw drivers, tweezers etc  - old wisdom from  magnetic tape recorders
 
 My best practice is
-Use rotation vector 0x05 with 400Hz update rate
+Use rotation vector 0x05 with 400Hz update rate.
 Degauss the board.
-Be careful with indoor use
+Be careful with indoor use.
 In setup call save_periodic_DCD(); and set cal to ME_cal(1,1,1,0);
-This achieves best cal 3 status
-Calibrate the board including iron parts in the vicinity
+This achieves best cal 3 status.
+Calibrate the board including iron parts in the vicinity.
 Temperature should be as constant as possible. Ideal would be a kind of a thermostat housing  (not tested) 
