@@ -28,3 +28,4 @@ Be careful with indoor use
 In setup call save_periodic_DCD(); and set cal to ME_cal(1,1,1,0);
 This achieves best cal 3 status
 Calibrate the board including iron parts in the vicinity
+Temperature should be as constant as possible. Ideal would be a kind of a thermostat housing  (not tested) 
