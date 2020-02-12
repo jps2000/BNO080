@@ -403,22 +403,20 @@ void get_Product_ID(){
  To rotate a vector V = (vx,vx,vz) in quaternion frame
  
  W = (wx,wy,wz) 
- wx = 2 * ( R00 * vx + R10 * vy + R20 * vz);
- wy = 2 * ( R01 * vx + R11 * vy + R21 * vz):
- wz = 2 * ( R02 * vx + R12 * vy + R22 * vz):
+ wx = 2.0f * ( R00 * vx + R10 * vy + R20 * vz);
+ wy = 2.0f * ( R01 * vx + R11 * vy + R21 * vz):
+ wz = 2.0f * ( R02 * vx + R12 * vy + R22 * vz):
 
  For example gravity vector  g = (0,0,1)  --> G = (gx,gy,gz) = (R20, R21, R22)
 
- Euler angles from rotation matrix:
+ # Euler angles from rotation matrix:
  
  yaw   =  atan2f(R10 , R00);                    // heading
  pitch =  -  asinf(R20); =  -  asinf(gx);
  roll  =  atan2f(R21 , R22); = atan2f(gy , gz);
  
- 
- 
- 
- # Euler angles from rotation matrix
+  
+ # Euler angles from quaternions
  yaw   =  atan2f(Q1 * Q2 + Q0 * Q3, Q0 * Q0 + Q1 * Q1 - 0.5f);   // heading
  pitch =  -  asinf(2.0f * (Q1 * Q3 - Q0 * Q2));
  roll  =  atan2f(Q0 * Q1 + Q2 * Q3, Q0 * Q0 + Q3 * Q3 - 0.5f);
