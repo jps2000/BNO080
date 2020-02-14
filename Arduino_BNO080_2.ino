@@ -471,5 +471,16 @@ alternative:
 float dotproduct = Q0 * q0 + Q1 * q1 + Q2 * q2 + Q3 * q3;
 float angle = radtodeg * 2.0f * acos(dotproduct);
 
-//*************************************************************************************
+//*************************************************************************************Jizhong XiaoJizhong Xiao
+     //**************** dphi calculation************
+      float argument = (QT0 * Q0 + QT1 * Q1 + QT2 * Q2 + QT3 * Q3);  // calculate delta angle to previous sample
+      if (abs(argument) > 1) argument = 1.0f;                        // check for N/A
+     
+      if(asin(argument) > 0) dphi = 2.0f * acos(argument);             
+      else dphi = 2.0f * (PI - acos(argument));                      // in case rotation is >360 deg  ( quat flip signs)
+     
+      dphi *= radtodeg;                                              // conversion to deg
+      if(dphi < 1.4f) dphi = 0.0f;                                   // Noise cancelling (empirical value)
+
+      //*********************************************
 */
