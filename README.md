@@ -30,3 +30,5 @@ In setup call save_periodic_DCD(); and set cal to ME_cal(1,1,1,0);
 This achieves best cal 3 status.
 Calibrate the board including iron parts in the vicinity.
 Temperature should be as constant as possible. Ideal would be a kind of a thermostat housing  (not tested) 
+It is important to understand that compensating gyro drift (temperature etc)  requires some slow continuous movements of the sensor like wearing on the body and walking around.
+Having it at rest with changing temperature gives poor results
