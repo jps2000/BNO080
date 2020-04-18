@@ -1,5 +1,7 @@
-/* Utilities (Quaternion mathematics)
- (q0,q1,q2,q3) = (w,ix,jy,kz)
+Utilities (Quaternion mathematics)
+
+  (q0,q1,q2,q3) = (w,ix,jy,kz)
+  
   q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3  = 1
 
 // Fast inverse square-root see Lomont C. 2003  fast inverse square root Purdue Univ
@@ -136,9 +138,9 @@ float angle = radtodeg * 2.0f * acos(dotproduct);
       if(dphi < 1.4f) dphi = 0.0f;                                   // Noise cancelling (empirical value)
       //*********************************************
 
+The quaternion conjugate (q1,q2,q3 *=-1.0f) can be used to swap the relative frames described by an orientation (Madgwick paper page 4)
 
 
 
 
 
-*/
