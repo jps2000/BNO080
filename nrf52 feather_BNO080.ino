@@ -24,9 +24,9 @@
  # BNO Tare by sending "t" via bleuart
 
 Connect BNO080 breakout  to feather nrf52:
-SDA --> SDA  (4k7 pullup)
-SCL--> SCL   (4k7 pullup)
-N_RST --> pin 27 (4k7 pullup)
+SDA --> SDA  (add 4k7 pullup)
+SCL--> SCL   (add 4k7 pullup)
+N_RST --> P0.27 == GPIO5 (add 4k7 pullup)
 3V3
 GND
  
