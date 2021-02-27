@@ -51,7 +51,7 @@ unsigned long plot_timer          = 0;
 
 #define BNO_ADDRESS               0x4A            // Device address when SA0 Pin 17 = GND; 0x4B SA0 Pin 17 = VDD
 
-uint8_t cargo[25]; 
+uint8_t cargo[32];                                // need to be big enough !
 
 float Q0,Q1,Q2,Q3,H_est;                                     
 uint8_t stat_;                                    // Status (0-3)
