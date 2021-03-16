@@ -6,8 +6,7 @@ The _1 version is not up to date. So take it for reference only.
 
 The BNO080 by http://hillcrestlabs.com/ is a successor of the BNO055 from Bosch Sensortec www.bosch-sensortec.com. It offers more features and a significantly improved performance however with a quite different interface. 
 Breakout boards are now also available http://hillcrestlabs.com/store/fsm300/ . Hillcrestlabs has issued a code using a ST Nucleo eval board. https://github.com/hcrest/bno080-nucleo-demo.
-There is also a universal breakout distributed by Sparkfun https://www.sparkfun.com/products/14686.
-Adafruit: https://www.adafruit.com/product/4754
+There are also universal breakouts from Sparkfun https://www.sparkfun.com/products/14686 and Adafruit: https://www.adafruit.com/product/4754
 
 The BNO080 generates high performance quaternions, linear acceleration etc: at an extraordinary high data rate (up to 400Hz). Therefore  the device is best suited for robotics and other IMU applications where  is desirable to use also Atmega 328 controllers like Arduino Nano and others.
 
