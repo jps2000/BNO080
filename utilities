@@ -143,7 +143,9 @@ float angle = radtodeg * 2.0f * acos(dotproduct);
       if(dphi < 1.4f) dphi = 0.0f;                                   // Noise cancelling (empirical value)
       //*********************************************
 
-The quaternion conjugate (q1,q2,q3 *=-1.0f) can be used to swap the relative frames described by an orientation (Madgwick paper page 4)
+The quaternion conjugate (q1,q2,q3 *=-1.0f) can be used to swap the relative frames described by an orientation (Madgwick paper page 4).
+Quats  are given as Sensor frame. The konjugates are then the quats from  global frame. To calculate  eulers from the latter are  different.
+For some applications these are the appropriate ones. 
 
 
 
