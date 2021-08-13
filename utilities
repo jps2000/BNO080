@@ -79,7 +79,7 @@ static inline void normalizeQuaternion(T& q0, T& q1, T& q2, T& q3)
   
  # Euler angles from quaternions 
  
- yaw   =  atan2f(q1 * q2 +q0 * q3, q0 * q0 + q1 * q1 - 0.5f);   // heading
+ yaw   =  atan2f(q1 * q2 + q0 * q3, q0 * q0 + q1 * q1 - 0.5f);   // heading
  pitch =  -  asinf(2.0f * (q1 * q3 - q0 * q2));
  roll  =  atan2f(q0 * q1 + q2 * q3, q0 * q0 + q3 * q3 - 0.5f);
  
@@ -94,13 +94,29 @@ static inline void normalizeQuaternion(T& q0, T& q1, T& q2, T& q3)
  roll  *= radtodeg;
 //***********************************************************************************
 // from Diebel James (2006), Representing Attitude: Euler Angles, Unit Quaternions, and Rotation  Vectors Stanford University
+// cave this paper uses different rotation matrix notation then above
+ 
+ # Rotation matrix (half)
+  (R11 R12 R13)
+ =(R21 R22 R23)
+  (R31 R32 R33)
+  
+  R11 = q0 * q0 + q1 * q1 -0.5f; // = 0.5f - q2 * q2 - q3 * q3;
+  R21 = q1 * q2 - q0 * q3;
+  R31 = q1 * q3 + q0 * q2;
+  R12 = q1 * q2 + q0 * q3;
+  R22 = q0 * q0 + q2 * q2 -0.5; // = 0.5f - q1 * q1 - q3 * q3;
+  R32 = q2 * q3 - q0 * q1;
+  R13 = q1 * q3 - q0 * q2;
+  R23 = q2 * q3 + q0 * q1;
+  R33 = q0 * q0 + q3 * q3 -0.5f; // = 0.5f -q1 * q1 -q2 * q2;
 
 //Euler Angle Sequence (1,2,1)
 yaw = atan2(R21, R31);
 pitch = acos(2.0 * R11);
 roll = atan2(R12, -R13);
 
-//Euler Angle Sequence (1,2,3)  (this is the same as above) *************** Cardan angles,  Tait- Bryan angles, nautical angles, pointing forward along x axis
+//Euler Angle Sequence (1,2,3)  *************** Cardan angles,  Tait- Bryan angles, nautical angles, pointing forward along x axis
 yaw = atan2(R23, R33);
 pitch = -asin(2.0 * R13);
 roll = atan2(R12, R11);
@@ -130,7 +146,7 @@ yaw = atan2(R31, R11);
 pitch = -asin(2.0 * R21);
 roll = atan2(R23, R22);
 
-//Euler Angle Sequence (2,3,2)
+//Euler Angle Sequence (2,3,2) ????
 yaw = atan2(R32, R12);
 pitch = acos(2.0 * R22);
 roll = atan2(R23, -R21);
@@ -145,7 +161,7 @@ yaw = atan2(R13, R23);
 pitch = acos(2.0 * R33);
 roll = atan2(R31, -R32);
 
-//Euler Angle Sequence (3,2,1)
+//Euler Angle Sequence (3,2,1)      same as above
 yaw = atan2(-R21, R11);
 pitch = asin(2.0 * R31);
 roll = atan2(-R32, R33);
